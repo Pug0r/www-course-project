@@ -1,10 +1,27 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1 class="title">
-  Flask Login Example
-</h1>
-<h2 class="subtitle">
-  Easy authentication and authorization in Flask.
-</h2>
+    <h1 class="title">
+      CHWYTLIWA NAZWA APLIKACJI
+    </h1>
+    <h2 class="subtitle">
+      projekt na www
+    </h2>
+    <button> Dodaj opinie</button>
+    <input type="text" id="searchMainTable" placeholder="Wyszukaj prowadzącego">
+
+    <table id="mainTable">
+        <tr class="mainTableHeader">
+            {% for header in headers %}
+            <th class="mainTableCell">{{ header }}</th>
+            {% endfor %}
+        </tr>
+            {% for row in data %}
+                <tr class="mainTableRow">
+                {% for cell in row %}
+                    <td class="mainTableCell"> {{ cell }}</td>
+                {% endfor %}
+                </tr>
+            {% endfor %}
+    </table>
 {% endblock %}
