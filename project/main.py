@@ -1,23 +1,38 @@
 from flask import Blueprint, render_template
 from flask_login import login_required, current_user
-from . import db
+from project.models import Course, Lecturer, Opinion
+from sqlalchemy import func
+from project import db
 
 main = Blueprint('main', __name__)
 
 
-def create_table():
-    headers = ('h1', 'h2', 'h3')
-    data = (('uno', 'dos', 'tres'), ('raz', 'dwa', 'trzy'))
-    pass
-
-
-headers = ('Imie', 'Nazwisko', 'Przedmiot')
-data = (('Krzysztof', 'Kutt', 'Linux'), ('Barbara', 'Lewandowska', 'AM2'))
-
-
 @main.route('/')
 def index():
-    return render_template('index.html', headers=headers, data=data)
+    headers = ('Imie', 'Nazwisko', 'Przedmiot', 'Nastawienie wobec studenta', 'Umiejętność przekazywania wiedzy',
+               'Własna inicjatywa, przekazywanie dodatkowych treści', 'Przygotowanie merytoryczne do przedmiotu',
+               'Dostosowanie wymagań względem poziomu nauczania')
+    results = db.session.query(
+        Lecturer.name,
+        Lecturer.surname,
+        Course.name,
+        func.round(func.avg(Opinion.nastawienie), 2),
+        func.round(func.avg(Opinion.przekazywanie_wiedzy), 2),
+        func.round(func.avg(Opinion.inicjatywa), 2),
+        func.round(func.avg(Opinion.przygotowanie), 2),
+        func.round(func.avg(Opinion.dostosowanie_wymagan), 2)
+    ).join(
+        Course,
+        Lecturer.id == Course.lecturer_id
+    ).join(
+        Opinion,
+        Opinion.course_id == Course.id
+    ).group_by(
+        Lecturer.name,
+        Lecturer.surname,
+        Course.name
+    ).all()
+    return render_template('index.html', headers=headers, data=results)
 
 @main.route('/profile')
 @login_required
