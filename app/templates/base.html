@@ -22,7 +22,7 @@
   <div class="container-fluid">
     <a class="navbar-brand" href="{{ url_for('main.index') }}">Strona główna</a>
 
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <div class="collapse navbar-collapse " id="navbarSupportedContent">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item">
           <a href="{{ url_for('main.profile') }}" class="nav-link">
@@ -30,20 +30,19 @@
           </a>
         </li>
         <li class="nav-item">
-          <a href="{{ url_for('auth.login') }}" class="nav-link">
-            Zaloguj się
-          </a>
-        </li>
-        <li class="nav-item">
+            {%if not current_user.is_authenticated %}
           <a href="{{ url_for('auth.signup') }}" class="nav-link">
             Zarejestruj się
           </a>
+            {% endif %}
         </li>
-        <li class="nav-item">
-          <a href="{{ url_for('auth.logout') }}" class="nav-link">
-            Wyloguj się
-          </a>
-        </li>
+          <li class="nav-item">
+           {%if current_user.is_authenticated %}
+          <a href="{{ url_for('auth.logout') }}" class="nav-link"> Wyloguj się</a>
+       {%else%}
+          <a href="{{ url_for('auth.login') }}" class="nav-link">Zaloguj się</a>
+        {% endif %}</li>
+
       </ul>
     </div>
   </div>
