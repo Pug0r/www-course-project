@@ -51,4 +51,32 @@ def index():
 @main.route('/profile')
 @login_required
 def profile():
-    return render_template('profile.html', username=current_user.username)
+    headers = (
+        'Imie', 'Nazwisko', 'Przedmiot', 'Nastawienie wobec studenta', 'Umiejętność przekazywania wiedzy',
+        'Własna inicjatywa, przekazywanie dodatkowych treści', 'Przygotowanie merytoryczne do przedmiotu',
+        'Dostosowanie wymagań względem poziomu nauczania')
+    user_opinions = (db.session.query(
+        Lecturer.name,
+        Lecturer.surname,
+        Course.name,
+        Opinion.nastawienie,
+        Opinion.przekazywanie_wiedzy,
+        Opinion.inicjatywa,
+        Opinion.przygotowanie,
+        Opinion.dostosowanie_wymagan
+    ).join(
+        Course,
+        Course.id == Opinion.course_id
+    ).join(
+        Lecturer,
+        Lecturer.id == Course.lecturer_id
+    )
+    .where(Opinion.user_id == current_user.id).all())
+    return render_template('profile.html', username=current_user.username,
+                           opinions=user_opinions, headers=headers)
+
+
+@main.route('/opinion')
+@login_required
+def add_new_opinion():
+    return "u did it!"

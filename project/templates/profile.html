@@ -2,6 +2,22 @@
 
 {% block content %}
 <h1 class="title">
-  Welcome, {{ name }}!
+  Witaj, {{ username }}!
 </h1>
+    <h3> Poniżej znajdziesz swoje opinie. </h3>
+    <input type="text" id="searchMainTable" placeholder="Wyszukaj prowadzącego">
+    <table id="mainTable">
+        <tr class="mainTableHeader">
+            {% for header in headers %}
+            <th class="mainTableCell">{{ header }}</th>
+            {% endfor %}
+        </tr>
+            {% for opinion in opinions %}
+                <tr class="mainTableRow">
+                {% for cell in opinion %}
+                    <td class="mainTableCell"> {{ cell }}</td>
+                {% endfor %}
+                </tr>
+            {% endfor %}
+    </table>
 {% endblock %}
