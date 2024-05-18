@@ -8,6 +8,17 @@
     justify-content: center;
 }
 
+td{
+     border: 1px solid #808080 ;
+}
+
+/* Score column */
+td:nth-of-type(4){
+    font-weight: bold;
+    border-right: 2px solid #000;
+    border-left: 2px solid #000;
+}
+
 .mainTableRow:nth-child(even){
     background-color: #e5e5e5;
 }
