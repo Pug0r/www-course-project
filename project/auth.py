@@ -50,6 +50,11 @@ def signup_post():
         flash("Email already exists")
         return redirect(url_for('auth.signup'))
 
+    if not validate_email_domain(email):
+        flash("Email must be from UJ domain.")
+        return redirect(url_for('auth.signup'))
+
+
     # create a new user with the form data. Hash the password so the plaintext version isn't saved.
     new_user = User(email=email, username=name, password_hash=generate_password_hash(password))
 
@@ -65,3 +70,15 @@ def signup_post():
 def logout():
     logout_user()
     return redirect(url_for('main.index'))
+
+
+def validate_email_domain(email) -> bool:
+    """ Provided email must be in set of UJ domains """
+    allowed_domains = ('uj.edu.pl', 'student.uj.edu.pl', 'doctoral.uj.edu.pl')
+    try:
+        _, domain = email.split('@')
+        if domain in allowed_domains:
+            return True
+    except ValueError:
+        return False
+    return False
