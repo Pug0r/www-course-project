@@ -1,7 +1,7 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
-from project.config import Config
+from app.config import Config
 
 # init SQLAlchemy so we can use it later in our models
 db = SQLAlchemy()
@@ -16,7 +16,7 @@ def create_app():
     db.init_app(app)
     with app.app_context():
         db.create_all()
-        from project.helper import populate_db, clear_db
+        from app.helper import populate_db, clear_db
         if Config.POPULATE_DB:
             clear_db()
             populate_db()
@@ -37,7 +37,7 @@ def create_app():
     app.register_blueprint(auth_blueprint)
 
     # blueprint for non-auth parts of app
-    from .main import main as main_blueprint
+    from .routes import main as main_blueprint
     app.register_blueprint(main_blueprint)
 
     return app

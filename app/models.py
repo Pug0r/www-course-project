@@ -1,4 +1,4 @@
-from project import db
+from app import db
 from flask_login import UserMixin
 import sqlalchemy as sa
 import sqlalchemy.orm as so

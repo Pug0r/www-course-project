@@ -1,9 +1,9 @@
 import sqlalchemy
 from flask import Blueprint, render_template
 from flask_login import login_required, current_user
-from project.models import Course, Lecturer, Opinion
+from app.models import Course, Lecturer, Opinion
 from sqlalchemy import func
-from project import db
+from app import db
 
 main = Blueprint('main', __name__)
 

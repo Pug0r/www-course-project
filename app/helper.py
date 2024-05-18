@@ -1,4 +1,4 @@
-from project import db
+from app import db
 from sqlalchemy import text
 from werkzeug.security import generate_password_hash
 
