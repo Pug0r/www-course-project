@@ -28,3 +28,25 @@ function getColor(value){
     });
 });
 
+// AJAX for courses for a given lecturer
+  $(document).ready(function() {
+    $('#controlSelectLecturer').on('change', function() {
+      var selected_lecturer = $(this).val();
+      if (selected_lecturer) {
+        $.ajax({
+          type: 'POST',
+          url: '/get_lecturer_courses',
+          data: { selected_lecturer: selected_lecturer },
+          success: function(data) {
+            $('#controlSelectCourse').empty().append('<option value="">Choose...</option>');
+            $.each(data, function(index, value) {
+              $('#controlSelectCourse').append('<option name="course" value="'+ value +'">'+ value +'</option>');
+            });
+          }
+        });
+      } else {
+        $('#controlSelectCourse').empty().append('<option value="">Choose...</option>');
+      }
+    });
+  });
+

@@ -4,7 +4,77 @@
 <h1 class="title">
   Witaj, {{ username }}!
 </h1>
-    <h3> Poniżej znajdziesz swoje opinie. </h3>
+    <h3 style="margin: 10px;"> Poniżej znajdziesz swoje opinie. </h3>
+    <div style="float:left; margin-top: 10px" class="container">
+   <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+    Dodaj opinię
+  </button>
+  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Dodaj opinię o prowadzącym</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <form method="POST" action="/submit_opinion">
+              <div class="form-group">
+                <label for="controlSelectLecturer">Prowadzący</label>
+                <select class="form-control" id="controlSelectLecturer" name="lecturer" required>
+                  <option disabled selected value> -- wybierz -- </option>
+                    {% for lecturer in add_opinion_on %}
+                        <option> {{ ' '.join(lecturer) }} </option>
+                    {% endfor %}
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="controlSelectCourse">Kurs</label>
+                <select class="form-control" id="controlSelectCourse" name="course" required>
+
+                </select>
+              </div>
+            <div class="form-group">
+                {% for full_name, short_name in zip(['Nastawienie wobec studenta', 'Umiejętność przekazywania wiedzy',
+                'Własna inicjatywa, przekazywanie dodatkowych treści', 'Przygotowanie merytoryczne do przedmiotu',
+                'Dostosowanie wymagań względem poziomu nauczania'],
+                ['nastawienie', 'przekazywanie', 'inicjatywa', 'przygotowanie', 'dostosowanie'])%}
+                    <h3> {{ full_name }}</h3>
+                    <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="radio" name="{{ short_name }}Radio" id="{{ short_name }}1" value="1" required>
+                      <label class="form-check-label" for="inlineRadio1">1</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="radio" name="{{ short_name }}Radio" id="{{ short_name }}2" value="2">
+                      <label class="form-check-label" for="inlineRadio2">2</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="radio" name="{{ short_name }}Radio" id="{{ short_name }}3" value="3">
+                      <label class="form-check-label" for="inlineRadio3">3</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="radio" name="{{ short_name }}Radio" id="{{ short_name }}4" value="4">
+                      <label class="form-check-label" for="inlineRadio3">4</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="radio" name="{{ short_name }}Radio" id="{{ short_name }}5" value="5">
+                      <label class="form-check-label" for="inlineRadio3">5</label>
+                    </div>
+                    {% endfor %}
+            </div>
+              <div class="form-group">
+                  <h3> Komentarz </h3>
+                <textarea class="form-control" id="opinionComment" rows="5" name="comment"></textarea>
+              </div>
+                    <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Przerwij</button>
+          <button type="submit" class="btn btn-primary">Dodaj opinię</button>
+        </div>
+            </form>
+        </div>
+      </div>
+    </div>
+  </div>
+    </div>
     <input type="text" id="searchMainTable" placeholder="Wyszukaj prowadzącego">
     <table id="mainTable">
         <tr class="mainTableHeader">

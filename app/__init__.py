@@ -10,6 +10,7 @@ db = SQLAlchemy()
 def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
+    app.jinja_env.globals.update(zip=zip)
     #app.config['SECRET_KEY'] = 'secret-key-goes-here'
     #app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite'
 

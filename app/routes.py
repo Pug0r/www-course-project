@@ -1,5 +1,5 @@
 import sqlalchemy
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, request, jsonify, flash, redirect, url_for
 from flask_login import login_required, current_user
 from app.models import Course, Lecturer, Opinion
 from sqlalchemy import func
@@ -40,10 +40,10 @@ def index():
         Course.name
     ).order_by(
         sqlalchemy.desc(func.round((func.avg(Opinion.nastawienie) +
-                                   func.avg(Opinion.przekazywanie_wiedzy) +
-                                   func.avg(Opinion.inicjatywa) +
-                                   func.avg(Opinion.przygotowanie) +
-                                   func.avg(Opinion.dostosowanie_wymagan)) / 5, 2))
+                                    func.avg(Opinion.przekazywanie_wiedzy) +
+                                    func.avg(Opinion.inicjatywa) +
+                                    func.avg(Opinion.przygotowanie) +
+                                    func.avg(Opinion.dostosowanie_wymagan)) / 5, 2))
     ).all())
     return render_template('index.html', headers=headers, data=results)
 
@@ -70,13 +70,43 @@ def profile():
     ).join(
         Lecturer,
         Lecturer.id == Course.lecturer_id
-    )
-    .where(Opinion.user_id == current_user.id).all())
+    ).where(Opinion.user_id == current_user.id).all())
+    user_opinions_id = list(map(lambda x: int(x[0]), db.session.query(Opinion.course_id).where(Opinion.user_id == current_user.id).all()))
+    lecturers_to_opinion = (db.session.query(Lecturer.name, Lecturer.surname)
+                            .join(Course, Lecturer.id == Course.lecturer_id)
+                            .filter(~Course.id.in_(user_opinions_id)).all())
     return render_template('profile.html', username=current_user.username,
-                           opinions=user_opinions, headers=headers)
+                           opinions=user_opinions, headers=headers, add_opinion_on=lecturers_to_opinion)
 
 
-@main.route('/opinion')
+@main.route('/get_lecturer_courses', methods=['POST'])
+@login_required  # delete if doesn't work
+def get_lecturer_courses():
+    name, surname = request.form['selected_lecturer'].split()
+    data = (db.session.query(Course.name).join(Lecturer, Lecturer.id == Course.id)
+            .where(Lecturer.name == name, Lecturer.surname == surname).all())
+    data = [tuple(row) for row in data]  # returned by db aren't json serializable
+    return jsonify(data)
+
+
+
+@main.route('/submit_opinion', methods=['POST'])
 @login_required
 def add_new_opinion():
-    return "u did it!"
+    # Verification is done on html side
+    # TODO: add some feedback to user
+    lecturer_name, lecturer_surname = request.form['lecturer'].split()
+    course_id = (db.session.query(Course.id).join(Lecturer, Course.lecturer_id == Lecturer.id)
+                 .where(Lecturer.name == lecturer_name, Lecturer.surname == lecturer_surname, Course.name == request.form['course'])).scalar()
+    print(course_id)
+    opinion = Opinion(user_id=current_user.id,
+                      course_id=course_id,
+                      nastawienie=int(request.form['nastawienieRadio']),
+                      przekazywanie_wiedzy=int(request.form['przekazywanieRadio']),
+                      inicjatywa=int(request.form['inicjatywaRadio']),
+                      przygotowanie=int(request.form['przygotowanieRadio']),
+                      dostosowanie_wymagan=int(request.form['dostosowanieRadio']),
+                      comment=request.form['comment'])  # you shouldve been passing IDs around:)) think for the future!!
+    db.session.add(opinion)
+    db.session.commit()
+    return redirect(url_for('main.profile'))
