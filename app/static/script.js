@@ -1,13 +1,11 @@
 // Search on table
 $(document).ready(function() {
     var $rows = $('#mainTable tr:gt(0)');
-    console.log($rows)
     $('#searchMainTable').keyup(function () {
-        var val = $.trim($(this).val()).replace(/ +/g, ' ').toLowerCase();
-
+        var val = $.trim($(this).val()).replace(/ +/g, ' ').toLowerCase(); // multiple spaces
         $rows.show().filter(function () {
             var text = $(this).text().replace(/\s+/g, ' ').toLowerCase();
-            return !~text.indexOf(val);
+            return !~text.indexOf(val); // efficient check if val not in text
         }).hide();
     });
 });
