@@ -110,3 +110,39 @@ def add_new_opinion():
     db.session.add(opinion)
     db.session.commit()
     return redirect(url_for('main.profile'))
+
+
+@main.route('/get_comments', methods=['GET'])
+@login_required
+def get_comments():
+    page = int(request.args.get('page', 1))
+    per_page = int(request.args.get('limit', 5))
+    comments = ((db.session.query(Opinion.nastawienie,
+                                  Opinion.przekazywanie_wiedzy,
+                                  Opinion.inicjatywa,
+                                  Opinion.przygotowanie,
+                                  Opinion.dostosowanie_wymagan,
+                                  Opinion.comment,
+                                  Course.name,
+                                  Lecturer.name,
+                                  Lecturer.surname,
+                                  User.username)
+                 .join(Course, Opinion.course_id == Course.id)
+                 .join(Lecturer, Course.lecturer_id == Lecturer.id))
+                .join(User, Opinion.id == User.id).offset((page-1)*per_page).limit(page*per_page).all())
+    comments = [{'nastawienie': com[0],
+                 'przekazywanie': com[1],
+                 'inicjatywa': com[2],
+                 'przygotowanie': com[3],
+                 'dostosowanie': com[4],
+                 'comment': com[5],
+                 'course_name': com[6],
+                 'lecturer_name': ' '.join(com[7:9]),
+                 'username': com[9]} for com in comments]
+    return jsonify(comments)
+
+
+@main.route('/comments')
+@login_required
+def display_comments():
+    return render_template('comments.html')
