@@ -13,9 +13,9 @@
         </h2>
         <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
           <div class="accordion-body">
-              Strona ma ułatwić studentom wybór odpowiedniego prowadzącego przy zapisie na przedmioty.
-              Różni studenci mają różne oczekiwania względem prowadzących.
-              DODAJ WIECEJ TEKSTU
+              Strona służy do dzielenia się opiniami wśród studentów na temat prowadzących. Aplikacja przeznaczona jest
+              do stosowania wewnętrznego (np. wewnętrzny serwer studencki). Dzięki ocenom różnych aspektów jak i komentarzom,
+              studenci mogą dobierać prowadzących jak najbardziej im odpowiadających.
           </div>
         </div>
       </div>
@@ -29,7 +29,7 @@
           <div class="accordion-body">
               <p>Dla niezalogowanego użytkownika strona umożliwia jedynie przeglądanie podsumowania opinii innych studentów (tabela poniżej).</p>
               <p><strong>Po założeniu konta i zalogowaniu</strong>, użytkownik może wystawić swoim prowadzącym opinie, zobaczyć podsumowanie swoich wystawionych opinii i
-              czytać komentarze na temat prowadzących wystawione przez innych studentów. Celem uwiarygodnienia opini, konto musi być założone na mail z domeny uczelnianej.</p>
+              czytać komentarze na temat prowadzących wystawione przez innych studentów. Celem uwiarygodnienia opinii, konto musi być założone na maila z domeny uczelnianej.</p>
           </div>
         </div>
       </div>
@@ -61,7 +61,8 @@
         </div>
     </div>
 
-    <label for="searchMainTable"> Wyszukaj </label><input type="text" id="searchMainTable" placeholder="Szukaj po dowolnym polu">
+    <label for="searchMainTable"> Wyszukaj </label>
+    <input type="text" id="searchMainTable" placeholder="Szukaj po dowolnym polu">
     <table id="mainTable">
         <tr class="mainTableHeader">
             {% for header in headers %}
